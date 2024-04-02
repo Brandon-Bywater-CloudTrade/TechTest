@@ -54,3 +54,12 @@ Some ideas are:
 
 * Please feel free to change or refactor any code that has been supplied within the solution and think about clean maintainable code and architecture when extending the project.
 * If any additional packages, tools or setup are required to run your completed version, please document these thoroughly.
+
+
+# ----- Additional Libraries ------
+- AutoMapper
+- Bogus
+
+These libraries were used for mapping and generating fake data respectively. This was done to make the project more maintainable and to make it easier to test the application.
+They are not necessary for the application to run fundamentally, but would require some refactoring to remove them. Such as mappings replaced with the actual properties and fake data replaced with actual data.
+I chose them because of my familiarity with them and the fact that they are widely used in the industry, and their inlcusion in the solution was simple and straightforward requiring minimal setup and learning overhead.

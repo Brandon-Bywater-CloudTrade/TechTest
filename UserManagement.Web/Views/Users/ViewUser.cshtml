@@ -1,0 +1,61 @@
+@model UserManagement.Web.Models.Users.ViewUserViewModel;
+
+@{
+    var user = Model.User;
+}
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <p class="text-danger">@Model.Error</p>
+    <a asp-controller="Users" asp-action="users">Back To Users</a>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        User Details
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@user.Forename @user.Surname</h5>
+                        <p class="card-text">
+                            <strong>Email:</strong> @user.Email <br>
+                            <strong>Active:</strong> @user.IsActive <br>
+                            <strong>Date of Birth:</strong> @user.DateOfBirth.ToShortDateString()
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Logging Info
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Changes</th>
+                                    <th scope="col">Time Of Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var log in Model.LoggingEntries.OrderByDescending(x => x.TimeOfChange))
+                                {
+                                    <tr>
+                                        <td>@log.Action</td>
+                                        <td style="white-space: pre-line">@Html.Raw(log.Changes)</td>
+                                        <td>@log.TimeOfChange</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

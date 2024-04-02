@@ -1,5 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using UserManagement.Data.Extensions;
+using UserManagement.Services.Extensions;
+using UserManagement.Web.Mappings;
 using Westwind.AspNetCore.Markdown;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +14,11 @@ builder.Services
     .AddDomainServices()
     .AddMarkdown()
     .AddControllersWithViews();
+
+builder.Services.AddSingleton(new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<MappingProfiles>();
+}).CreateMapper());
 
 var app = builder.Build();
 
