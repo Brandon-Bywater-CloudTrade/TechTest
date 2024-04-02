@@ -1,5 +1,9 @@
 ﻿@model UserManagement.Web.Models.Users.UserListViewModel
 
+@{
+    ViewBag.Title = "Users";
+}
+
 <h2>User List</h2>
 
 <div class="table-responsive">
@@ -11,6 +15,7 @@
                 <th>Surname</th>
                 <th>Email</th>
                 <th>Account Active</th>
+                <th>Date Of Birth</th>
                 <th style="width: 1px;"></th>
             </tr>
         </thead>
@@ -34,14 +39,17 @@
                         @(item.IsActive ? "Yes" : "No")
                     </td>
                     <td>
+                        @(item.DateOfBirth)
+                    </td>
+                    <td>
                         <div class="dropdown">
                             <button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="btnToggleActions">
                                 Actions
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
-                                <li><a class="dropdown-item" href="#">View</a></li>
-                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li><a asp-controller="Users" asp-action="user" asp-route-userId="@item.Id" class="dropdown-item">View</a></li>
+                                <li><a asp-controller="Users" asp-action="edit-user" asp-route-userId="@item.Id" class="dropdown-item">Edit</a></li>
+                                <li><a asp-controller="Users" asp-action="delete-user" asp-route-userId="@item.Id" class="dropdown-item">Delete</a></li>
                             </ul>
                         </div>
                     </td>
@@ -53,13 +61,11 @@
 
 <div>
     <div class="btn-group" role="group">
-        <a asp-controller="Users" asp-action="List" class="btn btn-default">Show All</a>
-        <a href="#" class="btn btn-default">Active Only</a>
-        <a href="#" class="btn btn-default">Non Active</a>
+        <a asp-controller="Users" asp-action="users" class="btn btn-default">Show All</a>
+        <a asp-controller="Users" asp-action="users-by-activity" asp-route-isActive="true" class="btn btn-default">Active Only</a>
+        <a asp-controller="Users" asp-action="users-by-activity" asp-route-isActive="false" class="btn btn-default">Non Active</a>
     </div>
 
-    <a href="#" class="btn btn-primary float-end">
-        Add User
-    </a>
+    <a asp-controller="Users" asp-action="create-user" class="btn btn-primary float-end">Add User</a>
 </div>
 

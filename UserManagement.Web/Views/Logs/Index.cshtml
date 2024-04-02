@@ -1,0 +1,97 @@
+﻿@model UserManagement.Web.Models.Logs.LogsIndexViewModel;
+
+@{
+    ViewData["Title"] = "Logs";
+    var startPage = Math.Max(1, Model.Pagination.PageNumber - 5);
+    var endPage = Math.Min(startPage + 9, (int)Math.Ceiling((double)Model.Pagination.TotalItems / Model.Pagination.PageSize));
+
+}
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <p class="text-danger">@Model.Error</p>
+    <a asp-controller="Logs" asp-action="">Back To Logs</a>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Logging Info
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">User Id</th>
+                                    <th scope="col">Changes</th>
+                                    <th scope="col">Time of Change</th>
+                                    <th scope="col" style="width: 1px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var log in Model.Logs)
+                                {
+                                    <tr>
+                                        <td>@log.Action</td>
+                                        <td><a asp-action="view-user" asp-route-userId="@log.UserId">@log.UserId</a></td>
+                                        <td>@log.Changes</td>
+                                        <td>@log.TimeOfChange</td>
+                                        <td>
+                                            <!-- Expandable later in case we want to delete (or edit?) logs later-->
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="btnToggleActions">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
+                                                    <li><a asp-controller="Logs" asp-action="view-log" asp-route-logId="@log.Id" class="dropdown-item">View</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <form asp-action="Index" method="get" class="me-3" id="pageSizeForm">
+                <label for="pageSize">Page size:</label>
+                <select asp-for=Pagination.PageSize id="pageSize" name="pageSize" class="form-select" onchange="document.getElementById('pageSizeForm').submit()">
+                    <option value="1">1</option>
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                </select>
+            </form>
+
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item @(Model.Pagination.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-pageSize="@Model.Pagination.PageSize">Start</a>
+                    </li>
+                    <li class="page-item @(Model.Pagination.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.Pagination.PageNumber - 1)" asp-route-pageSize="@Model.Pagination.PageSize">Previous</a>
+                    </li>
+                    @for (var i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == Model.Pagination.PageNumber ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.Pagination.PageSize">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.Pagination.PageNumber * Model.Pagination.PageSize >= Model.Pagination.TotalItems ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.Pagination.PageNumber + 1)" asp-route-pageSize="@Model.Pagination.PageSize">Next</a>
+                    </li>
+                    <li class="page-item @(Model.Pagination.PageNumber * Model.Pagination.PageSize >= Model.Pagination.TotalItems ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.Pagination.TotalItems / Model.Pagination.PageSize + 1)" asp-route-pageSize="@Model.Pagination.PageSize">End</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+}
